@@ -21,7 +21,7 @@ module Turbo
     end
 
     # If you don't want to precompile Turbo's assets (eg. because you're using webpack),
-    # you can do this in an intiailzer:
+    # you can do this in an initializer:
     #
     # config.after_initialize do
     #   config.assets.precompile -= Turbo::Engine::PRECOMPILE_ASSETS
