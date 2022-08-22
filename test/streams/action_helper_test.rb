@@ -63,4 +63,52 @@ class Turbo::ActionHelperTest < ActionCable::Channel::TestCase
 
     assert_equal stream, turbo_stream_action_tag("append", target: "message_1", template: "Template", class: { "stream": true, "another-stream": true, "no-stream": false })
   end
+
+  test "raises ArgumentError if no target attribute is passed for remove" do
+    exp = assert_raises(ArgumentError) { turbo_stream_action_tag("remove") }
+
+    assert_equal "target or targets must be supplied", exp.message
+  end
+
+  test "raises ArgumentError if no target attribute is passed for replace" do
+    exp = assert_raises(ArgumentError) { turbo_stream_action_tag("replace") }
+
+    assert_equal "target or targets must be supplied", exp.message
+  end
+
+  test "raises ArgumentError if no target attribute is passed for before" do
+    exp = assert_raises(ArgumentError) { turbo_stream_action_tag("before") }
+
+    assert_equal "target or targets must be supplied", exp.message
+  end
+
+  test "raises ArgumentError if no target attribute is passed for after" do
+    exp = assert_raises(ArgumentError) { turbo_stream_action_tag("after") }
+
+    assert_equal "target or targets must be supplied", exp.message
+  end
+
+  test "raises ArgumentError if no target attribute is passed for update" do
+    exp = assert_raises(ArgumentError) { turbo_stream_action_tag("update") }
+
+    assert_equal "target or targets must be supplied", exp.message
+  end
+
+  test "raises ArgumentError if no target attribute is passed for append" do
+    exp = assert_raises(ArgumentError) { turbo_stream_action_tag("append") }
+
+    assert_equal "target or targets must be supplied", exp.message
+  end
+
+  test "raises ArgumentError if no target attribute is passed for prepend" do
+    exp = assert_raises(ArgumentError) { turbo_stream_action_tag("prepend") }
+
+    assert_equal "target or targets must be supplied", exp.message
+  end
+
+  test "doesn't raise ArgumentError if no target attribute is passed for custom action" do
+    stream = assert_nothing_raised { turbo_stream_action_tag("my_custom_action") }
+
+    assert_equal "<turbo-stream action=\"my_custom_action\"><template></template></turbo-stream>", stream
+  end
 end

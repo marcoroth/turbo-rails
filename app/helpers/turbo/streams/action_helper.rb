@@ -1,6 +1,8 @@
 module Turbo::Streams::ActionHelper
   include ActionView::Helpers::TagHelper
 
+  TARGET_REQUIRED_ACTIONS = [:remove, :replace, :before, :after, :update, :append, :prepend]
+
   # Creates a `turbo-stream` tag according to the passed parameters. Examples:
   #
   #   turbo_stream_action_tag "remove", target: "message_1"
@@ -19,11 +21,18 @@ module Turbo::Streams::ActionHelper
     elsif targets = convert_to_turbo_stream_dom_id(targets, include_selector: true)
       tag.turbo_stream(template, **attributes.merge(action: action, targets: targets))
     else
-      raise ArgumentError, "target or targets must be supplied"
+      raise ArgumentError, "target or targets must be supplied" if needs_target_attribute?(action)
+
+      %(<turbo-stream action="#{action}">#{template}</turbo-stream>).html_safe
     end
   end
 
   private
+
+    def needs_target_attribute?(action)
+      TARGET_REQUIRED_ACTIONS.include?(action.to_sym)
+    end
+
     def convert_to_turbo_stream_dom_id(target, include_selector: false)
       if target.respond_to?(:to_key)
         [ ("#" if include_selector), ActionView::RecordIdentifier.dom_id(target) ].compact.join
