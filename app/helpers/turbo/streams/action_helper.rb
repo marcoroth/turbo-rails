@@ -7,8 +7,8 @@ module Turbo::Streams::ActionHelper
   #   turbo_stream_action_tag "replace", target: "message_1", template: %(<div id="message_1">Hello!</div>)
   #   # => <turbo-stream action="replace" target="message_1"><template><div id="message_1">Hello!</div></template></turbo-stream>
   #
-  #   turbo_stream_action_tag "replace", targets: "message_1", template: %(<div id="message_1">Hello!</div>)
-  #   # => <turbo-stream action="replace" targets="message_1"><template><div id="message_1">Hello!</div></template></turbo-stream>
+  #   turbo_stream_action_tag "replace", targets: "message", template: %(<div class="message">Hello!</div>)
+  #   # => <turbo-stream action="replace" targets="message"><template><div class="message">Hello!</div></template></turbo-stream>
   def turbo_stream_action_tag(action, target: nil, targets: nil, template: nil)
     template = action.to_sym == :remove ? "" : "<template>#{template}</template>"
 

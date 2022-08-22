@@ -45,7 +45,7 @@ class Turbo::Streams::TagBuilder
   # do). Examples:
   #
   #   <%= turbo_stream.remove_all ".clearance_item" %>
-  #   <%= turbo_stream.remove_all clearance %>
+  #   <%= turbo_stream.remove_all clearances %>
   def remove_all(targets)
     action_all :remove, targets, allow_inferred_rendering: false
   end
@@ -53,7 +53,7 @@ class Turbo::Streams::TagBuilder
   # Replace the <tt>target</tt> in the dom with either the <tt>content</tt> passed in, a rendering result determined
   # by the <tt>rendering</tt> keyword arguments, the content in the block, or the rendering of the target as a record. Examples:
   #
-  #   <%= turbo_stream.replace "clearance_5", "<div id='clearance_5'>Replace the dom target identified by clearance_5</div>" %>
+  #   <%= turbo_stream.replace "clearance_5", "<div id='clearance_5'>Replace the dom target identified by #clearance_5</div>" %>
   #   <%= turbo_stream.replace clearance %>
   #   <%= turbo_stream.replace clearance, partial: "clearances/clearance", locals: { title: "Hello" } %>
   #   <%= turbo_stream.replace "clearance_5" do %>
@@ -67,8 +67,8 @@ class Turbo::Streams::TagBuilder
   # by the <tt>rendering</tt> keyword arguments, the content in the block, or the rendering of the target as a record. Examples:
   #
   #   <%= turbo_stream.replace_all ".clearance_item", "<div class='clearance_item'>Replace the dom target identified by the class clearance_item</div>" %>
-  #   <%= turbo_stream.replace_all clearance %>
-  #   <%= turbo_stream.replace_all clearance, partial: "clearances/clearance", locals: { title: "Hello" } %>
+  #   <%= turbo_stream.replace_all clearances %>
+  #   <%= turbo_stream.replace_all clearances, partial: "clearances/clearance", locals: { title: "Hello" } %>
   #   <%= turbo_stream.replace_all ".clearance_item" do %>
   #     <div class='.clearance_item'>Replace the dom target identified by the class clearance_item</div>
   #   <% end %>
@@ -93,8 +93,8 @@ class Turbo::Streams::TagBuilder
   # the content in the block, or the rendering of the target as a record before the <tt>targets</tt> in the dom. Examples:
   #
   #   <%= turbo_stream.before_all ".clearance_item", "<div class='clearance_item'>Insert before the dom target identified by the class clearance_item</div>" %>
-  #   <%= turbo_stream.before_all clearance %>
-  #   <%= turbo_stream.before_all clearance, partial: "clearances/clearance", locals: { title: "Hello" } %>
+  #   <%= turbo_stream.before_all clearances %>
+  #   <%= turbo_stream.before_all clearances, partial: "clearances/clearance", locals: { title: "Hello" } %>
   #   <%= turbo_stream.before_all ".clearance_item" do %>
   #     <div class='clearance_item'>Insert before the dom target identified by clearance_item</div>
   #   <% end %>
@@ -119,8 +119,8 @@ class Turbo::Streams::TagBuilder
   # the content in the block, or the rendering of the target as a record after the <tt>targets</tt> in the dom. Examples:
   #
   #   <%= turbo_stream.after_all ".clearance_item", "<div class='clearance_item'>Insert after the dom target identified by the class clearance_item</div>" %>
-  #   <%= turbo_stream.after_all clearance %>
-  #   <%= turbo_stream.after_all clearance, partial: "clearances/clearance", locals: { title: "Hello" } %>
+  #   <%= turbo_stream.after_all clearances %>
+  #   <%= turbo_stream.after_all clearances, partial: "clearances/clearance", locals: { title: "Hello" } %>
   #   <%= turbo_stream.after_all "clearance_item" do %>
   #     <div class='clearance_item'>Insert after the dom target identified by the class clearance_item</div>
   #   <% end %>
@@ -132,8 +132,8 @@ class Turbo::Streams::TagBuilder
   # by the <tt>rendering</tt> keyword arguments, the content in the block, or the rendering of the target as a record. Examples:
   #
   #   <%= turbo_stream.update "clearance_5", "Update the content of the dom target identified by clearance_5" %>
-  #   <%= turbo_stream.update clearance %>
-  #   <%= turbo_stream.update clearance, partial: "clearances/unique_clearance", locals: { title: "Hello" } %>
+  #   <%= turbo_stream.update clearances %>
+  #   <%= turbo_stream.update clearances, partial: "clearances/unique_clearance", locals: { title: "Hello" } %>
   #   <%= turbo_stream.update "clearance_5" do %>
   #     Update the content of the dom target identified by clearance_5
   #   <% end %>
@@ -145,8 +145,8 @@ class Turbo::Streams::TagBuilder
   # by the <tt>rendering</tt> keyword arguments, the content in the block, or the rendering of the targets as a record. Examples:
   #
   #   <%= turbo_stream.update_all "clearance_item", "Update the content of the dom target identified by the class clearance_item" %>
-  #   <%= turbo_stream.update_all clearance %>
-  #   <%= turbo_stream.update_all clearance, partial: "clearances/new_clearance", locals: { title: "Hello" } %>
+  #   <%= turbo_stream.update_all clearances %>
+  #   <%= turbo_stream.update_all clearances, partial: "clearances/new_clearance", locals: { title: "Hello" } %>
   #   <%= turbo_stream.update_all "clearance_item" do %>
   #     Update the content of the dom target identified by the class clearance_item
   #   <% end %>
@@ -158,11 +158,11 @@ class Turbo::Streams::TagBuilder
   # rendering result determined by the <tt>rendering</tt> keyword arguments, the content in the block,
   # or the rendering of the content as a record. Examples:
   #
-  #   <%= turbo_stream.append "clearances", "<div id='clearance_5'>Append this to .clearances</div>" %>
+  #   <%= turbo_stream.append "clearances", "<div id='clearance_5'>Append this to #clearances</div>" %>
   #   <%= turbo_stream.append "clearances", clearance %>
   #   <%= turbo_stream.append "clearances", partial: "clearances/unique_clearance", locals: { clearance: clearance } %>
   #   <%= turbo_stream.append "clearances" do %>
-  #     <div id='clearance_5'>Append this to .clearances</div>
+  #     <div id='clearance_5'>Append this to #clearances</div>
   #   <% end %>
   def append(target, content = nil, **rendering, &block)
     action :append, target, content, **rendering, &block
@@ -172,7 +172,7 @@ class Turbo::Streams::TagBuilder
   # rendering result determined by the <tt>rendering</tt> keyword arguments, the content in the block,
   # or the rendering of the content as a record. Examples:
   #
-  #   <%= turbo_stream.append_all ".clearances", "<div class='clearance_item'>Append this to .clearance_group</div>" %>
+  #   <%= turbo_stream.append_all ".clearances", "<div class='clearance_item'>Append this to .clearances</div>" %>
   #   <%= turbo_stream.append_all ".clearances", clearance %>
   #   <%= turbo_stream.append_all ".clearances", partial: "clearances/new_clearance", locals: { clearance: clearance } %>
   #   <%= turbo_stream.append_all ".clearances" do %>
@@ -186,11 +186,11 @@ class Turbo::Streams::TagBuilder
   # rendering result determined by the <tt>rendering</tt> keyword arguments or the content in the block,
   # or the rendering of the content as a record. Examples:
   #
-  #   <%= turbo_stream.prepend "clearances", "<div id='clearance_5'>Prepend this to .clearances</div>" %>
+  #   <%= turbo_stream.prepend "clearances", "<div id='clearance_5'>Prepend this to #clearances</div>" %>
   #   <%= turbo_stream.prepend "clearances", clearance %>
   #   <%= turbo_stream.prepend "clearances", partial: "clearances/unique_clearance", locals: { clearance: clearance } %>
   #   <%= turbo_stream.prepend "clearances" do %>
-  #     <div id='clearance_5'>Prepend this to .clearances</div>
+  #     <div id='clearance_5'>Prepend this to #clearances</div>
   #   <% end %>
   def prepend(target, content = nil, **rendering, &block)
     action :prepend, target, content, **rendering, &block
