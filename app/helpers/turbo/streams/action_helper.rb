@@ -23,7 +23,7 @@ module Turbo::Streams::ActionHelper
     else
       raise ArgumentError, "target or targets must be supplied" if needs_target_attribute?(action)
 
-      %(<turbo-stream action="#{action}">#{template}</turbo-stream>).html_safe
+      tag.turbo_stream(template, **attributes.merge(action: action))
     end
   end
 
