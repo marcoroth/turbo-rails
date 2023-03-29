@@ -211,15 +211,21 @@ class Turbo::Streams::TagBuilder
   end
 
   # Send an action of the type <tt>name</tt> to <tt>target</tt>. Options described in the concrete methods.
-  def action(name, target: nil, content: nil, allow_inferred_rendering: true, **rendering, &block)
-    template = render_template(target, content, allow_inferred_rendering: allow_inferred_rendering, **rendering, &block)
+  def action(name = nil, target = nil, content: nil, allow_inferred_rendering: true, **kwargs, &block)
+    name = name || kwargs.delete(:name)
+    target = target || kwargs.delete(:target)
+
+    template = render_template(target, content, allow_inferred_rendering: allow_inferred_rendering, **kwargs, &block)
 
     turbo_stream_action_tag name, target: target, template: template
   end
 
   # Send an action of the type <tt>name</tt> to <tt>targets</tt>. Options described in the concrete methods.
-  def action_all(name, targets: nil, content: nil, allow_inferred_rendering: true, **rendering, &block)
-    template = render_template(targets, content, allow_inferred_rendering: allow_inferred_rendering, **rendering, &block)
+  def action_all(name = nil, targets = nil, content: nil, allow_inferred_rendering: true, **kwargs, &block)
+    name = name || kwargs.delete(:name)
+    targets = targets || kwargs.delete(:targets)
+
+    template = render_template(targets, content, allow_inferred_rendering: allow_inferred_rendering, **kwargs, &block)
 
     turbo_stream_action_tag name, targets: targets, template: template
   end
