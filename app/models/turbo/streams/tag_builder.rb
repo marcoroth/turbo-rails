@@ -39,7 +39,7 @@ class Turbo::Streams::TagBuilder
   def remove(target = nil, targets: nil, **kwargs)
     target = target || kwargs.delete(:target)
 
-    action :remove, target, allow_inferred_rendering: false, **kwargs
+    action :remove, target: target, allow_inferred_rendering: false, **kwargs
   end
 
   # Removes the <tt>targets</tt> from the dom. The targets can either be a CSS selector string or an object that responds to
@@ -51,7 +51,7 @@ class Turbo::Streams::TagBuilder
   def remove_all(targets = nil, **kwargs)
     targets = targets || kwargs.delete(:targets)
 
-    action_all :remove, targets, allow_inferred_rendering: false, **kwargs
+    action_all :remove, targets: targets, allow_inferred_rendering: false, **kwargs
   end
 
   # Replace the <tt>target</tt> in the dom with either the <tt>content</tt> passed in, a rendering result determined
@@ -67,7 +67,7 @@ class Turbo::Streams::TagBuilder
     target = target || kwargs.delete(:target)
     content = content || kwargs.delete(:content)
 
-    action :replace, target, content, **kwargs, &block
+    action :replace, target: target, content: content, **kwargs, &block
   end
 
   # Replace the <tt>targets</tt> in the dom with either the <tt>content</tt> passed in, a rendering result determined
@@ -83,7 +83,7 @@ class Turbo::Streams::TagBuilder
     targets = targets || kwargs.delete(:targets)
     content = content || kwargs.delete(:content)
 
-    action_all :replace, targets, content, **kwargs, &block
+    action_all :replace, targets: targets, content: content, **kwargs, &block
   end
 
   # Insert the <tt>content</tt> passed in, a rendering result determined by the <tt>rendering</tt> keyword arguments,
@@ -99,7 +99,7 @@ class Turbo::Streams::TagBuilder
     target = target || kwargs.delete(:target)
     content = content || kwargs.delete(:content)
 
-    action :before, target, content, **kwargs, &block
+    action :before, target: target, content: content, **kwargs, &block
   end
 
   # Insert the <tt>content</tt> passed in, a rendering result determined by the <tt>rendering</tt> keyword arguments,
@@ -115,7 +115,7 @@ class Turbo::Streams::TagBuilder
     targets = targets || kwargs.delete(:targets)
     content = content || kwargs.delete(:content)
 
-    action_all :before, targets, content, **kwargs, &block
+    action_all :before, targets: targets, content: content, **kwargs, &block
   end
 
   # Insert the <tt>content</tt> passed in, a rendering result determined by the <tt>rendering</tt> keyword arguments,
@@ -131,7 +131,7 @@ class Turbo::Streams::TagBuilder
     target = target || kwargs.delete(:target)
     content = content || kwargs.delete(:content)
 
-    action :after, target, content, **kwargs, &block
+    action :after, target: target, content: content, **kwargs, &block
   end
 
   # Insert the <tt>content</tt> passed in, a rendering result determined by the <tt>rendering</tt> keyword arguments,
@@ -147,7 +147,7 @@ class Turbo::Streams::TagBuilder
     targets = targets || kwargs.delete(:targets)
     content = content || kwargs.delete(:content)
 
-    action_all :after, targets, content, **kwargs, &block
+    action_all :after, targets: targets, content: content, **kwargs, &block
   end
 
   # Update the <tt>target</tt> in the dom with either the <tt>content</tt> passed in or a rendering result determined
@@ -163,7 +163,7 @@ class Turbo::Streams::TagBuilder
     target = target || kwargs.delete(:target)
     content = content || kwargs.delete(:content)
 
-    action :update, target, content, **kwargs, &block
+    action :update, target: target, content: content, **kwargs, &block
   end
 
   # Update the <tt>targets</tt> in the dom with either the <tt>content</tt> passed in or a rendering result determined
@@ -179,7 +179,7 @@ class Turbo::Streams::TagBuilder
     targets = targets || kwargs.delete(:targets)
     content = content || kwargs.delete(:content)
 
-    action_all :update, targets, content, **kwargs, &block
+    action_all :update, targets: targets, content: content, **kwargs, &block
   end
 
   # Append to the target in the dom identified with <tt>target</tt> either the <tt>content</tt> passed in or a
@@ -197,9 +197,9 @@ class Turbo::Streams::TagBuilder
     content = content || kwargs.delete(:content)
 
     if target
-      action :append, target, content, **kwargs, &block
+      action :append, target: target, content: content, **kwargs, &block
     else
-      action_all :append, targets, content, **kwargs, &block
+      action_all :append, targets: targets, content: content, **kwargs, &block
     end
   end
 
@@ -217,7 +217,7 @@ class Turbo::Streams::TagBuilder
     targets = targets || kwargs.delete(:targets)
     content = content || kwargs.delete(:content)
 
-    action_all :append, targets, content, **kwargs, &block
+    action_all :append, targets: targets, content: content, **kwargs, &block
   end
 
   # Prepend to the target in the dom identified with <tt>target</tt> either the <tt>content</tt> passed in or a
@@ -234,7 +234,7 @@ class Turbo::Streams::TagBuilder
     target = target || kwargs.delete(:target)
     content = content || kwargs.delete(:content)
 
-    action :prepend, target, content, **kwargs, &block
+    action :prepend, target: target, content: content, **kwargs, &block
   end
 
   # Prepend to the targets in the dom identified with <tt>targets</tt> either the <tt>content</tt> passed in or a
@@ -251,24 +251,36 @@ class Turbo::Streams::TagBuilder
     targets = targets || kwargs.delete(:targets)
     content = content || kwargs.delete(:content)
 
-    action_all :prepend, targets, content, **kwargs, &block
+    action_all :prepend, targets: targets, content: content, **kwargs, &block
   end
 
   # Send an action of the type <tt>name</tt> to <tt>target</tt>. Options described in the concrete methods.
-  def action(name, target, content = nil, allow_inferred_rendering: true, **kwargs, &block)
-    template = render_template(target, content, allow_inferred_rendering: allow_inferred_rendering, **kwargs, &block)
+  def action(name = nil, target = nil, content: nil, allow_inferred_rendering: true, **kwargs, &block)
+    name = name || kwargs.delete(:name)
+    target = target || kwargs.delete(:target)
+
+    rendering = extract_rendering_options(**kwargs)
+    template = render_template(target, content, allow_inferred_rendering: allow_inferred_rendering, **rendering, &block)
 
     turbo_stream_action_tag name, target: target, template: template
   end
 
   # Send an action of the type <tt>name</tt> to <tt>targets</tt>. Options described in the concrete methods.
-  def action_all(name, targets, content = nil, allow_inferred_rendering: true, **kwargs, &block)
-    template = render_template(targets, content, allow_inferred_rendering: allow_inferred_rendering, **kwargs, &block)
+  def action_all(name = nil, targets = nil, content: nil, allow_inferred_rendering: true, **kwargs, &block)
+    name = name || kwargs.delete(:name)
+    targets = targets || kwargs.delete(:targets)
+
+    rendering = extract_rendering_options(**kwargs)
+    template = render_template(targets, content, allow_inferred_rendering: allow_inferred_rendering, **rendering, &block)
 
     turbo_stream_action_tag name, targets: targets, template: template
   end
 
   private
+    def extract_rendering_options(**rendering)
+      rendering.except(:name, :target, :targets)
+    end
+
     def render_template(target, content = nil, allow_inferred_rendering: true, **rendering, &block)
       case
       when content.respond_to?(:render_in)
@@ -279,8 +291,8 @@ class Turbo::Streams::TagBuilder
         @view_context.capture(&block)
       when rendering.any?
         @view_context.render(formats: [ :html ], **rendering)
-      else
-        render_record(target) if allow_inferred_rendering
+      when allow_inferred_rendering
+        render_record(target)
       end
     end
 
